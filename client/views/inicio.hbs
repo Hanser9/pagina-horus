@@ -336,21 +336,24 @@
             <div class="form">
               <div id="sendmessage">Your message has been sent. Thank you!</div>
               <div id="errormessage"></div>
-              <form action="" method="post" role="form" class="contactForm">
+              <form role="form" class="contactForm">
                 <div class="form-group">
-                  <input type="text" name="name" class="form-control input-text" id="name" placeholder="Nombre" data-rule="minlen:4"/>
+                  <input type="text" name="name" class="form-control input-text" id="name" placeholder="Nombre" data-rule="minlen:4" ng-model="correo.nombre"/>
                   <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                  <input type="email" class="form-control input-text" name="email" id="email" placeholder="Correo" data-rule="email" data-msg="Correo invalido" />
+                  <input type="email" class="form-control input-text" name="email" id="email" placeholder="Correo" data-rule="email" data-msg="Correo invalido" ng-model="correo.mail"/>
                   <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                  <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Mensaje"></textarea>
+                  <input type="text" class="form-control input-text" name="tel" placeholder="Telefono" ng-model="correo.tel"/>
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Mensaje" ng-model="correo.mensaje"></textarea>
                   <div class="validation"></div>
                 </div>
 
-                <button type="submit" class="btn input-btn">Enviar mensaje</button>
+                <button class="btn input-btn" ng-click="btnEnviarCorreo()">Enviar mensaje</button>
               </form>
             </div>
           </div>
