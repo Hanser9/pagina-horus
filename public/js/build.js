@@ -168,7 +168,7 @@ this.initInterfaz = function() {
 
 angular.module(MODULE_NAME)
 .service('HomeService', ['$http', function($http) {
-  var url = "https://localhost:6060";
+  var url = "https://hanserdev.site/horus";
   var urlBase = url + '/home';
 
   this.enviarMail = function(d) {
