@@ -14,16 +14,16 @@ var fs              = require('fs')
 var http            = helpers.isProduccion() ? require('http') : require('https')
 
 // CONFIGURAR HTTPS
-if (!helpers.isProduccion()) {
-    console.log('Ambiente de pruebas')
-    server = http.createServer({
-        key: fs.readFileSync(path.join('server', 'assets', 'key.pem')),
-        cert: fs.readFileSync(path.join('server', 'assets', 'cert.pem'))
-    }, app)
-} else {
+// if (!helpers.isProduccion()) {
+//     console.log('Ambiente de pruebas')
+//     server = http.createServer({
+//         key: fs.readFileSync(path.join('server', 'assets', 'key.pem')),
+//         cert: fs.readFileSync(path.join('server', 'assets', 'cert.pem'))
+//     }, app)
+// } else {
     console.log('Ambiente de producción')
     server = require('http').createServer(app)
-}
+// }
 
 // CONFIGURAR SOCKET IO
 io = require('socket.io').listen(server)
