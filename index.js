@@ -57,7 +57,7 @@ app.use(function (req, res, next) {
 })
 
 // PUERTO DONDE ESCUCHARA LA APP
-PUERTO = 6060;
+PUERTO = 3003;
 
 // CARPETA PUBLICA
 app.use(express.static(__dirname + '/public'));
