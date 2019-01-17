@@ -4,6 +4,8 @@ var alertify = require('alertifyjs');
 angular.module(MODULE_NAME)
 .controller('homeCtrl', ['$scope', 'HomeService', '$timeout', function($scope, HomeService, $timeout) {
   var ctrl = this;
+  $scope.loading = false;
+
   $scope.init = init;
   $scope.btnEnviarCorreo = btnEnviarCorreo;
 
@@ -19,9 +21,11 @@ angular.module(MODULE_NAME)
   }
 
   function btnEnviarCorreo() {
+    $scope.loading = true;
     var correo = $scope.correo
     if (correo.nombre === undefined || correo.mail === undefined || correo.tel === undefined || correo.mensaje === undefined) {
         alertify.error('Todos los campos son requeridos');
+        $scope.loading = false;
     }else {
       if (validar_email(correo.mail)) {
         var d = correo
@@ -30,9 +34,11 @@ angular.module(MODULE_NAME)
           console.log(res);
           alertify.success('Correo Enviado');
           $scope.correo = {}
+          $scope.loading = false;
         })
       }else {
           alertify.error('Ingrese un correo valido');
+          $scope.loading = false;
       }
     }
   }
