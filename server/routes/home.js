@@ -32,12 +32,12 @@ function enviarMail (req, res){
     var d = req.body
     console.log(d);
     var transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+      host: 'smtp-mail.outlook.com',
+      secureConnection: false,
+      port: 587,
       auth: {
-       user: 'josehdez40@gmail.com',
-       pass: 'homer213'
+       user: 'jcarloshdezr@hotmail.com',
+       pass: 'hanser213'
       }
     });
 
@@ -54,7 +54,7 @@ function enviarMail (req, res){
                 `
 
     var message = {
-          from: '"Contacto de Horus"<josehdez40@gmail.com>',
+          from: '"Contacto de Horus"<jcarloshdezr@hotmail.com>',
           to: 'jcarlos.horus@gmail.com',
           subject: 'Contacto Horus Network',
           html: correo
