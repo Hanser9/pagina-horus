@@ -67,7 +67,7 @@ function enviarMail (req, res){
           res.json({CorreoEnviado: true});
         } else
           console.log(err);
-        resolve();
+          res.json({CorreoEnviado: false});
       });
   });
 }
