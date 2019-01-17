@@ -32,12 +32,13 @@ function enviarMail (req, res){
     var d = req.body
     console.log(d);
     var transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+      host: 'smtp.gabssa.com.mx',
+      port: 587,
+      secure: false,
+      ignoreTLS: true,
       auth: {
-       user: 'carlos@gabssa.net',
-       pass: 'Halowars117'
+       user: 'blue@gabssa.com.mx',
+       pass: 'BLUE12457'
       }
     });
 
@@ -54,7 +55,7 @@ function enviarMail (req, res){
                 `
 
     var message = {
-          from: '"Contacto de Horus"<josehdez40@gmail.com>',
+          from: '"Contacto de Horus"<blue@gabssa.com.mx>',
           to: 'jcarlos.horus@gmail.com',
           subject: 'Contacto Horus Network',
           html: correo
