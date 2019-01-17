@@ -28,6 +28,7 @@ angular.module(MODULE_NAME)
         $scope.loading = false;
     }else {
       if (validar_email(correo.mail)) {
+        console.log('entro');
         var d = correo
         HomeService.enviarMail(d)
         .success(function(res){

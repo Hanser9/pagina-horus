@@ -1,4 +1,4 @@
-(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 var angular = require('angular');
 require('angular-utils-pagination');
 MODULE_NAME = 'home';
@@ -19,6 +19,8 @@ var alertify = require('alertifyjs');
 angular.module(MODULE_NAME)
 .controller('homeCtrl', ['$scope', 'HomeService', '$timeout', function($scope, HomeService, $timeout) {
   var ctrl = this;
+  $scope.loading = false;
+
   $scope.init = init;
   $scope.btnEnviarCorreo = btnEnviarCorreo;
 
@@ -34,20 +36,25 @@ angular.module(MODULE_NAME)
   }
 
   function btnEnviarCorreo() {
+    $scope.loading = true;
     var correo = $scope.correo
     if (correo.nombre === undefined || correo.mail === undefined || correo.tel === undefined || correo.mensaje === undefined) {
         alertify.error('Todos los campos son requeridos');
+        $scope.loading = false;
     }else {
       if (validar_email(correo.mail)) {
+        console.log('entro');
         var d = correo
         HomeService.enviarMail(d)
         .success(function(res){
           console.log(res);
           alertify.success('Correo Enviado');
           $scope.correo = {}
+          $scope.loading = false;
         })
       }else {
           alertify.error('Ingrese un correo valido');
+          $scope.loading = false;
       }
     }
   }
@@ -168,7 +175,8 @@ this.initInterfaz = function() {
 
 angular.module(MODULE_NAME)
 .service('HomeService', ['$http', function($http) {
-  var url = "https://hanserdev.site/horus";
+  var url = "http://www.horusnetwork.online";
+  // var url = "http://localhost:3003";
   var urlBase = url + '/home';
 
   this.enviarMail = function(d) {
@@ -208,7 +216,7 @@ angular.module(MODULE_NAME)
 
 },{"../helpers":3}],6:[function(require,module,exports){
 /**
- * alertifyjs 1.11.1 http://alertifyjs.com
+ * alertifyjs 1.11.2 http://alertifyjs.com
  * AlertifyJS is a javascript framework for developing pretty browser dialogs and notifications.
  * Copyright 2018 Mohammad Younes <Mohammad@alertifyjs.com> (http://alertifyjs.com) 
  * Licensed under GPL 3 <https://opensource.org/licenses/gpl-3.0>*/
@@ -395,16 +403,18 @@ angular.module(MODULE_NAME)
       *
       */
     function destruct(instance, initialize){
-        //delete the dom and it's references.
-        var root = instance.elements.root;
-        root.parentNode.removeChild(root);
-        delete instance.elements;
-        //copy back initial settings.
-        instance.settings = copy(instance.__settings);
-        //re-reference init function.
-        instance.__init = initialize;
-        //delete __internal variable to allow re-initialization.
-        delete instance.__internal;
+        if(instance.elements){
+            //delete the dom and it's references.
+            var root = instance.elements.root;
+            root.parentNode.removeChild(root);
+            delete instance.elements;
+            //copy back initial settings.
+            instance.settings = copy(instance.__settings);
+            //re-reference init function.
+            instance.__init = initialize;
+            //delete __internal variable to allow re-initialization.
+            delete instance.__internal;
+        }
     }
 
     /**
@@ -1393,8 +1403,10 @@ angular.module(MODULE_NAME)
             }
         }
 
-        // flag to cancel click event if already handled by end resize event (the mousedown, mousemove, mouseup sequence fires a click event.).
-        var cancelClick = false;
+        
+        var cancelClick = false,// flag to cancel click event if already handled by end resize event (the mousedown, mousemove, mouseup sequence fires a click event.).
+            modalClickHandlerTS=0 // stores last click timestamp to prevent executing the handler twice on double click.
+            ;
 
         /**
          * Helper: closes the modal dialog when clicking the modal
@@ -1405,14 +1417,18 @@ angular.module(MODULE_NAME)
          * @return {undefined}
          */
         function modalClickHandler(event, instance) {
-            var target = event.srcElement || event.target;
-            if (!cancelClick && target === instance.elements.modal && instance.get('closableByDimmer') === true) {
-                triggerClose(instance);
+            if(event.timeStamp - modalClickHandlerTS > 200 && (modalClickHandlerTS = event.timeStamp) && !cancelClick){
+                var target = event.srcElement || event.target;
+                if (instance.get('closableByDimmer') === true && target === instance.elements.modal) {
+                    triggerClose(instance);
+                }
+                cancelClick = false;
+                return false;
             }
-            cancelClick = false;
-            return false;
         }
 
+        // stores last call timestamp to prevent triggering the callback twice.
+        var callbackTS = 0;
         // flag to cancel keyup event if already handled by click event (pressing Enter on a focusted button).
         var cancelKeyup = false;
         /** 
@@ -1424,18 +1440,20 @@ angular.module(MODULE_NAME)
          * @return {undefined}
          */
         function triggerCallback(instance, check) {
-            for (var idx = 0; idx < instance.__internal.buttons.length; idx += 1) {
-                var button = instance.__internal.buttons[idx];
-                if (!button.element.disabled && check(button)) {
-                    var closeEvent = createCloseEvent(idx, button);
-                    if (typeof instance.callback === 'function') {
-                        instance.callback.apply(instance, [closeEvent]);
+            if(Date.now() - callbackTS > 200 && (callbackTS = Date.now())){
+                for (var idx = 0; idx < instance.__internal.buttons.length; idx += 1) {
+                    var button = instance.__internal.buttons[idx];
+                    if (!button.element.disabled && check(button)) {
+                        var closeEvent = createCloseEvent(idx, button);
+                        if (typeof instance.callback === 'function') {
+                            instance.callback.apply(instance, [closeEvent]);
+                        }
+                        //close the dialog only if not canceled.
+                        if (closeEvent.cancel === false) {
+                            instance.close();
+                        }
+                        break;
                     }
-                    //close the dialog only if not canceled.
-                    if (closeEvent.cancel === false) {
-                        instance.close();
-                    }
-                    break;
                 }
             }
         }
@@ -2701,7 +2719,7 @@ angular.module(MODULE_NAME)
                 }
                 // last dialog and tab index was set by us, remove it.
                 if(!openDialogs.length && tabindex === '0'){
-                    document.body.removeAttribute('tabindex')
+                    document.body.removeAttribute('tabindex');
                 }
                 return this;
             },
@@ -2720,15 +2738,17 @@ angular.module(MODULE_NAME)
              * @return {undefined}
              */
             destroy:function(){
-                if (this.__internal.isOpen ) {
-                    //mark dialog for destruction, this will be called on tranistionOut event.
-                    this.__internal.destroy = function(){
+                if(this.__internal) {
+                    if (this.__internal.isOpen ) {
+                        //mark dialog for destruction, this will be called on tranistionOut event.
+                        this.__internal.destroy = function(){
+                            destruct(this, initialize);
+                        };
+                        //close the dialog to unbind all events.
+                        this.close();
+                    }else if(!this.__internal.destroy){
                         destruct(this, initialize);
-                    };
-                    //close the dialog to unbind all events.
-                    this.close();
-                }else{
-                    destruct(this, initialize);
+                    }
                 }
                 return this;
             },
