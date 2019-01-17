@@ -36,8 +36,8 @@ function enviarMail (req, res){
       port: 465,
       secure: true,
       auth: {
-       user: 'josehdez40@gmail.com',
-       pass: 'homer213'
+       user: 'carlos@gabssa.net',
+       pass: 'Halowars117'
       }
     });
 
