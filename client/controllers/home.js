@@ -1,6 +1,6 @@
 require('../services/home');
 var alertify = require('alertifyjs');
-var nodemailer     = require('nodemailer');
+var nodemailer = require('nodemailer');
 
 angular.module(MODULE_NAME)
 .controller('homeCtrl', ['$scope', 'HomeService', '$timeout', function($scope, HomeService, $timeout) {
