@@ -56,7 +56,7 @@ function enviarMail (req, res){
 
     var message = {
           from: '"Contacto de Horus"<blue@gabssa.com.mx>',
-          to: 'jcarlos.horus@gmail.com',
+          to: 'jcarloshdezr@hotmail.com',
           subject: 'Contacto Horus Network',
           html: correo
       };
