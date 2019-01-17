@@ -31,12 +31,17 @@ function enviarMail (req, res){
   return new Promise (function (resolve, reject) {
     var d = req.body
     console.log(d);
-    var transport = nodemailer.createTransport("SMTP", {
-        service: "hotmail",
-        auth: {
-            user: "jcarloshdezr@hotmail.com",
-            pass: "hanser213"
-        }
+    var transporter = nodemailer.createTransport({
+      host: "smtp-mail.outlook.com", // hostname
+      secureConnection: false, // TLS requires secureConnection to be false
+      port: 587, // port for secure SMTP
+      auth: {
+          user: "jcarloshdezr@hotmail.com",
+          pass: "hanser213"
+      },
+      tls: {
+          ciphers:'SSLv3'
+      }
     });
 
     var correo = `
