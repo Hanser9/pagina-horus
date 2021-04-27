@@ -46,7 +46,7 @@
     "mysql": "^2.14.0",
     "nodemailer": "^4.6.8",
     "nodemon": "^1.18.6",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "socket.io": "^2.0.4",
     "sweetalert": "^2.1.0"
   },
