@@ -34,7 +34,7 @@
     "connect-redis": "^3.3.3",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
-    "express-handlebars": "^3.0.0",
+    "express-handlebars": "^5.3.1",
     "express-session": "^1.15.4",
     "formidable": "^1.1.1",
     "jquery": "^3.2.1",
